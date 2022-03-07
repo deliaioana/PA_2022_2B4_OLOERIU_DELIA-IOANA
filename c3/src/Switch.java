@@ -4,8 +4,8 @@ public class Switch extends Node {
 
     public Switch(String name, int numberOfPorts, int portsUsed, String location) {
         this.setName(name);
-        this.numberOfPorts = numberOfPorts;
-        this.portsUsed = portsUsed;
+        this.setNumberOfPorts(numberOfPorts);
+        this.setPortsUsed(portsUsed);
         this.setLocation(location);
     }
 
