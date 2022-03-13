@@ -12,6 +12,9 @@ public class Computer extends Node implements Identifiable, Storage {
         this.setLocation(location);
     }
 
+    public Computer() {
+    }
+
     @Override
     public int getStorageCapacity() {
         return storageCapacity;
@@ -51,5 +54,9 @@ public class Computer extends Node implements Identifiable, Storage {
                 ", storageCapacity=" + storageCapacity +
                 ", storageUsed=" + storageUsed +
                 '}';
+    }
+
+    public long corvertCapacityUnit(String unit){
+        return Storage.super.corvertCapacityUnit(unit);
     }
 }
