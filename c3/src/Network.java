@@ -68,11 +68,11 @@ public class Network {
         identifiable.sort(new NodeComparatorByID());
 
         for(Node node : identifiable){
-            System.out.println(node.getName() + ", IP:" + ((Identifiable) node).getIPAddress());
+            System.out.println(node.getName() + ", IP: " + ((Identifiable) node).getIPAddress());
         }
     }
 
-    public int computeSwhortestPathBetween(Node node1, Node node2){
+    public int computeShortestPathBetween(Node node1, Node node2){
         Map<Node, Integer> shortestPaths = new HashMap<>();
         computeShortestPathsFromSource(node1, shortestPaths);
         return shortestPaths.get(node2);
@@ -125,12 +125,12 @@ public class Network {
         return lowestDistanceNode;
     }
 
-    private void computeLowestDistance(Node currentNode, Integer edgeWeigh, Node sourceNode,
+    private void computeLowestDistance(Node currentNode, Integer edgeCost, Node sourceNode,
                                        Map<Node, Integer> shortestDistances) {
         int sourceDistance = shortestDistances.get(sourceNode);
 
-        if (sourceDistance + edgeWeigh < shortestDistances.get(currentNode)) {
-            shortestDistances.put(currentNode, sourceDistance + edgeWeigh);
+        if (sourceDistance + edgeCost < shortestDistances.get(currentNode)) {
+            shortestDistances.put(currentNode, sourceDistance + edgeCost);
         }
     }
 
@@ -145,6 +145,6 @@ public class Network {
     public void printShortestPathBetweenNodes(Node sourceNode, Node destinationNode){
         System.out.println("Shortest distance form node '" + sourceNode.getName() +
                 "' to node '" + destinationNode.getName() + "' is: " +
-                this.computeSwhortestPathBetween(sourceNode, destinationNode));
+                this.computeShortestPathBetween(sourceNode, destinationNode));
     }
 }

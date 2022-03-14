@@ -45,6 +45,6 @@ public class Main {
         network.printShortestPathBetweenNodes(node1, node6);
         network.printShortestPathBetweenNodes(node5, node3);
 
-        //network.printAllShortestPaths();
+            //network.printAllShortestPaths();
     }
 }
