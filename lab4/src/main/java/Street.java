@@ -1,5 +1,3 @@
-import org.apache.commons.lang3.tuple.Pair;
-
 public class Street{
     private String name;
     private Integer length;
@@ -19,23 +17,12 @@ public class Street{
         this.initializeIntersectionPair();
     }
 
+    public Street(Integer length){
+        this.setLength(length);
+    }
+
     public void initializeIntersectionPair(){
-        intersectionPair = new Pair<Intersection, Intersection>() {
-            @Override
-            public Intersection getLeft() {
-                return null;
-            }
-
-            @Override
-            public Intersection getRight() {
-                return null;
-            }
-
-            @Override
-            public Intersection setValue(Intersection value) {
-                return null;
-            }
-        };
+        intersectionPair = new Pair<Intersection, Intersection>();
     }
 
     public String getName(){

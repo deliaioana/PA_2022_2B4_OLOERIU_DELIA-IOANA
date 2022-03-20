@@ -64,7 +64,54 @@ public class Main {
         else
             System.out.println("Duplicates found");
 
+        /*
+          Compulsory */
+        System.out.println("\n------------------------- compulsory -------------------------");
+        City city = new City("Jump");
+        city.setIntersections(intersectionSet);
+        System.out.println(city);
 
+        city.printStreetsLongerThanLength(2);
 
+        System.out.println("\n------------------------- random names -------------------------");
+
+        city.giveRandomNames();
+        System.out.println(city);
+
+        System.out.println("\n------------------------- minimum spanning tree -------------------------");
+
+        City city2 = new City("Animal city");
+
+        Intersection[] intersectionArray2 = IntStream.range(1,10).
+                mapToObj(index -> new Intersection()).toArray(Intersection[]::new);
+
+        Integer[] streetLengthsArray2 = {4, 8, 8, 11, 7, 4, 2, 9, 14, 10, 2, 1, 6, 7};
+
+        Street[] streetArray2 = IntStream.range(1, 15).
+                mapToObj(index -> new Street(streetLengthsArray2[index-1])).toArray(Street[]::new);
+
+        intersectionArray2[0].addConnection(streetArray2[0], intersectionArray2[1]);
+        intersectionArray2[0].addConnection(streetArray2[1], intersectionArray2[7]);
+        intersectionArray2[1].addConnection(streetArray2[2], intersectionArray2[2]);
+        intersectionArray2[1].addConnection(streetArray2[3], intersectionArray2[7]);
+        intersectionArray2[2].addConnection(streetArray2[4], intersectionArray2[3]);
+        intersectionArray2[2].addConnection(streetArray2[5], intersectionArray2[5]);
+        intersectionArray2[2].addConnection(streetArray2[6], intersectionArray2[8]);
+        intersectionArray2[3].addConnection(streetArray2[7], intersectionArray2[4]);
+        intersectionArray2[3].addConnection(streetArray2[8], intersectionArray2[5]);
+        intersectionArray2[4].addConnection(streetArray2[9], intersectionArray2[5]);
+        intersectionArray2[5].addConnection(streetArray2[10], intersectionArray2[6]);
+        intersectionArray2[6].addConnection(streetArray2[11], intersectionArray2[7]);
+        intersectionArray2[6].addConnection(streetArray2[12], intersectionArray2[8]);
+        intersectionArray2[7].addConnection(streetArray2[13], intersectionArray2[8]);
+
+        Set<Intersection> intersectionSet2 = new HashSet<>(Arrays.stream(intersectionArray2).toList());
+        city2.setIntersections(intersectionSet2);
+
+        city2.giveRandomNames();
+
+        System.out.println("Minimun spanning tree value for '" + city2.getName() + "' is: " +
+                city2.MinimumSpanningTreeValue());
+        System.out.println(city2.MinimumSpanningTree());
     }
 }

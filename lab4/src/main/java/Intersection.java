@@ -21,6 +21,8 @@ public class Intersection {
     }
 
     public void addConnection(Street street, Intersection intersection){
+        Pair<Intersection, Intersection> intersectionPair = new Pair<>(this, intersection);
+        street.setIntersectionPair(intersectionPair);
         this.connections.put(intersection, street);
     }
 
