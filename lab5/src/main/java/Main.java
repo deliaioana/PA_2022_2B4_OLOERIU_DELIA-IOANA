@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Main {
     public static void main(String[] args) throws IOException, InvalidCatalogException {
@@ -26,7 +30,7 @@ public class Main {
         Catalog.save(catalog2, "D:\\E\\Anul_2_Semestrul_2\\PA\\here\\json.json");
 
         System.out.println("------------------------ print loaded catalog ------------------------");
-        Catalog loadedCatalog = new Catalog();
+        Catalog loadedCatalog;
         loadedCatalog = Catalog.load("D:\\E\\Anul_2_Semestrul_2\\PA\\here\\json.json");
         System.out.println(loadedCatalog);
     }

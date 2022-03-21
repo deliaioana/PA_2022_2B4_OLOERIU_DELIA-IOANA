@@ -1,10 +1,10 @@
 public class Item {
-    private String location;
-    private String title;
-    private String id;
-    private String author;
-    private String type;
-    private int year;
+    protected String location;
+    protected String title;
+    protected String id;
+    protected String author;
+    protected String type;
+    protected int year;
 
     public String getLocation() {
         return location;
