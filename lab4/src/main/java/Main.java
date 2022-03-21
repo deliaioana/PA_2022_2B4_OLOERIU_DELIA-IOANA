@@ -111,7 +111,7 @@ public class Main {
         city2.giveRandomNames();
 
         System.out.println("Minimun spanning tree value for '" + city2.getName() + "' is: " +
-                city2.MinimumSpanningTreeValue());
-        System.out.println(city2.MinimumSpanningTree());
+                city2.computeMinimumSpanningTreeValue());
+        System.out.println(city2.computeMinimumSpanningTree());
     }
 }

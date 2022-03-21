@@ -89,14 +89,14 @@ public class City {
         this.updateAndGetStreets();
     }
 
-    public int MinimumSpanningTreeValue(){
+    public int computeMinimumSpanningTreeValue(){
         MinimumSpanningTreeCalculator minimumSpanningTreeCalculator = new MinimumSpanningTreeCalculator();
         minimumSpanningTreeCalculator.setStreets(this.streets);
         minimumSpanningTreeCalculator.setIntersectionMap(this.intersections);
         return minimumSpanningTreeCalculator.getMinimumSpanningTreeValue();
     }
 
-    public Set<Street> MinimumSpanningTree(){
+    public Set<Street> computeMinimumSpanningTree(){
         MinimumSpanningTreeCalculator minimumSpanningTreeCalculator = new MinimumSpanningTreeCalculator();
         minimumSpanningTreeCalculator.setStreets(this.streets);
         minimumSpanningTreeCalculator.setIntersectionMap(this.intersections);

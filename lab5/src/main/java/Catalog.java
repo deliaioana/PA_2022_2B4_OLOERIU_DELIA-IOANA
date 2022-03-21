@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Catalog {
     private ArrayList<Item> items = new ArrayList<>();
@@ -55,5 +56,9 @@ public class Catalog {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addItems(Item[] itemArray) {
+        Arrays.stream(itemArray).forEach(this::add);
     }
 }
