@@ -50,6 +50,7 @@ public class Main {
             for (int j = 0; j < n; ++j)
                 adjacency[i][j] = areNeighbors(i, j, p, words);
 
+        /* // print adj matrix
         if (n < BOUND) {
             for (int i = 0; i < n; ++i) {
                 for (int j = 0; j < n; ++j)
@@ -57,7 +58,7 @@ public class Main {
                 System.out.println('\n');
             }
         }
-
+        */
 
             //neighbors array
             ArrayList<ArrayList<String>> neighbors = new ArrayList<>(n);
@@ -79,9 +80,6 @@ public class Main {
                 long timeDifference = endTime - startTime;
                 System.out.println("Running time of the application in nanoseconds: " + timeDifference);
             }
-
-
-
     }
 
     private static boolean areNeighbors ( int x, int y, int length, String[] words){

@@ -37,8 +37,37 @@ public class DrawingPanel extends JPanel {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, canvasWidth, canvasHeight);
         paintGrid(g);
-        //paintSticks(g);
+        placeStartingSticks(g);
         //paintStones(g);
+    }
+
+    public void placeStartingSticks(Graphics2D g) {
+        for (int row = 0; row < rows; row++) {
+            for(int horizontalBridge = 0; horizontalBridge < cols-2; horizontalBridge ++){
+                int x1 = padX + horizontalBridge * cellWidth;
+                int y1 = padY + row * cellHeight;
+                int x2 = padX + (horizontalBridge+1) * cellWidth;
+                int y2 = y1;
+                if(Math.random()<0.5)
+                    placeStick(g, x1, y1, x2, y2);
+            }
+        }
+        for (int col = 0; col < cols; col++) {
+            for(int verticalBridge = 0; verticalBridge < cols-2; verticalBridge ++){
+                int x1 = padX + col * cellWidth;
+                int y1 = padY + verticalBridge * cellHeight;
+                int x2 = x1;
+                int y2 = padY + (verticalBridge+1) * cellHeight;
+                if(Math.random()<0.5)
+                    placeStick(g, x1, y1, x2, y2);
+            }
+        }
+    }
+
+    private void placeStick(Graphics2D g, int x1, int y1, int x2, int y2){
+        g.setStroke(new BasicStroke(5));
+        g.setColor(Color.black);
+        g.drawLine(x1, y1, x2, y2);
     }
 
     private void paintGrid(Graphics2D g) {
