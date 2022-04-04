@@ -12,6 +12,7 @@ public class ConfigPanel extends JPanel {
         this.frame = frame;
         init();
     }
+
     private void init() {
         label = new JLabel("Grid size:");
         rowSpinner = new JSpinner(new SpinnerNumberModel(10, 2, 100, 1));

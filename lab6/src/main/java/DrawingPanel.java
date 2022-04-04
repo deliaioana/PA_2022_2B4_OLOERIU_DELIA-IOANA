@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class DrawingPanel extends JPanel {
@@ -10,6 +12,9 @@ public class DrawingPanel extends JPanel {
     int cellWidth, cellHeight;
     int padX, padY;
     int stoneSize = 20;
+    private Graphics graphics;
+    private boolean currentPlayer = false;
+    private Graph graph;
 
     BufferedImage image; //the offscreen image
     Graphics2D offscreen; //the offscreen graphics
@@ -29,21 +34,106 @@ public class DrawingPanel extends JPanel {
         this.boardWidth = (cols - 1) * cellWidth;
         this.boardHeight = (rows - 1) * cellHeight;
         setPreferredSize(new Dimension(canvasWidth, canvasHeight));
+
+        createGraph(rows, cols);
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent event) {
+                tryPlacingStone(event.getX(), event.getY());
+                repaint();
+            }
+        });
+    }
+
+    private void createGraph(int rows, int cols) {
+        graph = new Graph();
+        for(int i=0; i<rows; ++i)
+            for(int j=0; j<cols; ++j){
+                Node node = new Node(i+1, j+1);
+                graph.addNode(node);
+            }
+    }
+
+    public void tryPlacingStone(int x, int y) {
+        int thisRow = getRowFromX(y);
+        int thisCol = getColFromY(x);
+
+        if(isAValidNode(thisRow, thisCol)) {
+            if(respectsRules(thisRow, thisCol, currentPlayer)) {
+                graph.getNodeByRowCol(thisRow, thisCol).setUsed(true);
+                graph.getNodeByRowCol(thisRow, thisCol).setPlayer(currentPlayer);
+                this.setCurrentPlayer(!currentPlayer);
+            }
+            else {
+                System.out.println("Nod incorect! Alegeti alta mutare!");
+            }
+        }
+        else {
+            System.out.println("Nu ati apasat un nod!");
+        }
+
+    }
+
+    private boolean isAValidNode(int row, int col) {
+        return graph.getNodeByRowCol(row, col) != null;
+    }
+
+    private int getColFromY(int x) {
+        int col = 2;
+        //de implementat
+        return col;
+    }
+
+    private int getRowFromX(int y) {
+        int row = 2;
+        //de implementat
+        return row;
+    }
+
+    private boolean respectsRules(int x, int y, boolean currentPlayer) {
+        //de implementat
+        //sa fie langa ultimul pus
+        //
+        if(true){
+            return true;
+        }
+        return false;
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
+        setGraphics(g);
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, canvasWidth, canvasHeight);
         paintGrid(g);
         placeStartingSticks(g);
-        //paintStones(g);
+        placeStones(g);
+    }
+
+    private void placeStones(Graphics2D g) {
+        for (Node node : graph.getNodes()) {
+            if(node.isUsed())
+                placeStone(g, node.getRow(), node.getCol(), node.getPlayer());
+        }
+    }
+
+    public void placeStone(Graphics2D graphics, int nodeX, int nodeY, boolean player){
+        Graphics2D g = (Graphics2D) graphics;
+        if(!player){
+            g.setColor(Color.black);
+        }
+        else{
+            g.setColor(Color.orange);
+        }
+        g.fillOval(padX + (nodeX - 1) * cellWidth - stoneSize / 2,
+                padY + (nodeY - 1) * cellHeight - stoneSize / 2, stoneSize, stoneSize);
     }
 
     public void placeStartingSticks(Graphics2D g) {
         for (int row = 0; row < rows; row++) {
-            for(int horizontalBridge = 0; horizontalBridge < cols-2; horizontalBridge ++){
+            for(int horizontalBridge = 0; horizontalBridge < cols-1; horizontalBridge ++){
                 int x1 = padX + horizontalBridge * cellWidth;
                 int y1 = padY + row * cellHeight;
                 int x2 = padX + (horizontalBridge+1) * cellWidth;
@@ -53,7 +143,7 @@ public class DrawingPanel extends JPanel {
             }
         }
         for (int col = 0; col < cols; col++) {
-            for(int verticalBridge = 0; verticalBridge < cols-2; verticalBridge ++){
+            for(int verticalBridge = 0; verticalBridge < rows-1; verticalBridge ++){
                 int x1 = padX + col * cellWidth;
                 int y1 = padY + verticalBridge * cellHeight;
                 int x2 = x1;
@@ -109,6 +199,23 @@ public class DrawingPanel extends JPanel {
 
     @Override
     public void update(Graphics g) { } //No need for update
+
+    @Override
+    public Graphics getGraphics() {
+        return graphics;
+    }
+
+    public void setGraphics(Graphics graphics) {
+        this.graphics = graphics;
+    }
+
+    public void setCurrentPlayer(boolean currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public boolean getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     //Draw the offscreen image, using the original graphics
     /**@Override
