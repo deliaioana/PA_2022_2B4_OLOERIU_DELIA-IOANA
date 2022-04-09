@@ -27,6 +27,7 @@ public class ConfigPanel extends JPanel {
     }
 
     private void updateGrid(ActionEvent actionEvent) {
+        frame.canvas.setFirstTime(true);
         frame.canvas.init(getRows(), getCols());
         SwingUtilities.updateComponentTreeUI(frame);
     }

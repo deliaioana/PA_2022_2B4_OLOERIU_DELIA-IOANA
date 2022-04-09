@@ -1,8 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawingPanel extends JPanel {
     private final MainFrame frame;
@@ -12,12 +16,20 @@ public class DrawingPanel extends JPanel {
     int cellWidth, cellHeight;
     int padX, padY;
     int stoneSize = 20;
-    private Graphics graphics;
     private boolean currentPlayer = false;
     private Graph graph;
+    private boolean firstTime = true;
 
     BufferedImage image; //the offscreen image
     Graphics2D offscreen; //the offscreen graphics
+
+    public Graph getGraph(){
+        return graph;
+    }
+
+    public void setFirstTime(Boolean value){
+        firstTime = value;
+    }
 
     public DrawingPanel(MainFrame frame) {
         this.frame = frame;
@@ -47,6 +59,7 @@ public class DrawingPanel extends JPanel {
     }
 
     private void createGraph(int rows, int cols) {
+        //nullifyCurrentGraphAndNodes(); de implementat
         graph = new Graph();
         for(int i=0; i<rows; ++i)
             for(int j=0; j<cols; ++j){
@@ -56,60 +69,118 @@ public class DrawingPanel extends JPanel {
     }
 
     public void tryPlacingStone(int x, int y) {
-        int thisRow = getRowFromX(y);
-        int thisCol = getColFromY(x);
+        int circleX = getCircleX(x);
+        int circleY = getCircleY(y);
 
-        if(isAValidNode(thisRow, thisCol)) {
+        int thisRow = getRowFromY(y);
+        int thisCol = getColFromX(x);
+
+        if(areCoordInsideCircle(x, y, circleX, circleY)) {
             if(respectsRules(thisRow, thisCol, currentPlayer)) {
                 graph.getNodeByRowCol(thisRow, thisCol).setUsed(true);
                 graph.getNodeByRowCol(thisRow, thisCol).setPlayer(currentPlayer);
                 this.setCurrentPlayer(!currentPlayer);
+                graph.setLastNode(graph.getNodeByRowCol(thisRow, thisCol));
+                if(isAWinningPosition())
+                    System.out.println("Playarul care a facut ultima mutare a castigat!");
             }
             else {
-                System.out.println("Nod incorect! Alegeti alta mutare!");
+                //
             }
         }
         else {
-            System.out.println("Nu ati apasat un nod!");
+            //
         }
 
+    }
+
+    private boolean isAWinningPosition() {
+        int numberOfPossibleMoves = 0;
+        for (Node node : graph.getLastNode().getConnections()) {
+            if(!node.isUsed())
+                ++numberOfPossibleMoves;
+        }
+        return numberOfPossibleMoves == 0;
+    }
+
+    private boolean areCoordInsideCircle(int x, int y, int circleX, int circleY) {
+        double distance = Math.sqrt((x-circleX)*(x-circleX) + (y-circleY)*(y-circleY));
+        return ((double) stoneSize) / 2 > distance;
+    }
+
+    private int getCircleX(int x) {
+        int newX = x - padX + stoneSize/2;
+        int rectangleCol = ((int) Math.ceil(((double) newX) / ((double) cellWidth)));
+        int rectangleX = padX + (rectangleCol-1) * cellWidth;
+        return rectangleX;
+    }
+
+    private int getCircleY(int y) {
+        int newY = y - padY + stoneSize/2;
+        int rectangleRow = ((int) Math.ceil(((double) newY) / ((double) cellHeight)));
+        int rectangleY = padY + (rectangleRow-1) * cellHeight;
+        return rectangleY ;
     }
 
     private boolean isAValidNode(int row, int col) {
         return graph.getNodeByRowCol(row, col) != null;
     }
 
-    private int getColFromY(int x) {
-        int col = 2;
-        //de implementat
-        return col;
+    private int getColFromX(int x) {
+        int newX = x - padX + stoneSize/2;
+        int rectangleCol = ((int) Math.ceil(((double) newX) / ((double) cellWidth)));
+        return rectangleCol;
     }
 
-    private int getRowFromX(int y) {
-        int row = 2;
-        //de implementat
-        return row;
+    private int getRowFromY(int y) {
+        int newY = y - padY  + stoneSize/2;
+        int rectangleRow = ((int) Math.ceil(((double) newY) / ((double) cellHeight)));
+        return rectangleRow;
+
     }
 
     private boolean respectsRules(int x, int y, boolean currentPlayer) {
-        //de implementat
-        //sa fie langa ultimul pus
-        //
-        if(true){
-            return true;
-        }
-        return false;
+        if(graph.getLastNode() == null)
+            return (!graph.getNodeByRowCol(x, y).getConnections().isEmpty());
+        return (!graph.getNodeByRowCol(x, y).isUsed() &&
+                graph.getNodeByRowCol(x, y).isNeighbourWith(graph.getLastNode()));
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
-        setGraphics(g);
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, canvasWidth, canvasHeight);
         paintGrid(g);
-        placeStartingSticks(g);
+        placeSticks(g, firstTime);
         placeStones(g);
+    }
+
+    private void placeSticks(Graphics2D g, boolean firstTime) {
+        if(firstTime){
+            setFirstTime(false);
+            placeStartingSticks(g);
+        }
+        else {
+            placeSticksFromMemory(g);
+        }
+    }
+
+    private void placeSticksFromMemory(Graphics2D g) {
+        for ( Node node : graph.getNodes()) {
+            for (Node adjacentNode : node.getConnections()) {
+                placeStick(g, getNodeCenterX(node), getNodeCenterY(node),
+                        getNodeCenterX(adjacentNode), getNodeCenterY(adjacentNode));
+            }
+        }
+    }
+
+    private int getNodeCenterY(Node node) {
+        return padY + (node.getRow()-1) * cellHeight;
+    }
+
+    private int getNodeCenterX(Node node) {
+        return padX + (node.getCol()-1) * cellWidth;
     }
 
     private void placeStones(Graphics2D g) {
@@ -120,15 +191,14 @@ public class DrawingPanel extends JPanel {
     }
 
     public void placeStone(Graphics2D graphics, int nodeX, int nodeY, boolean player){
-        Graphics2D g = (Graphics2D) graphics;
         if(!player){
-            g.setColor(Color.black);
+            graphics.setColor(Color.orange);
         }
         else{
-            g.setColor(Color.orange);
+            graphics.setColor(Color.black);
         }
-        g.fillOval(padX + (nodeX - 1) * cellWidth - stoneSize / 2,
-                padY + (nodeY - 1) * cellHeight - stoneSize / 2, stoneSize, stoneSize);
+        graphics.fillOval(padX + (nodeY - 1) * cellWidth - stoneSize / 2,
+                padY + (nodeX - 1) * cellHeight - stoneSize / 2, stoneSize, stoneSize);
     }
 
     public void placeStartingSticks(Graphics2D g) {
@@ -138,8 +208,11 @@ public class DrawingPanel extends JPanel {
                 int y1 = padY + row * cellHeight;
                 int x2 = padX + (horizontalBridge+1) * cellWidth;
                 int y2 = y1;
-                if(Math.random()<0.5)
+                if(Math.random()<0.5){
                     placeStick(g, x1, y1, x2, y2);
+                    addAdjacency(graph.getNodeByRowCol(row+1, horizontalBridge+1),
+                            graph.getNodeByRowCol(row+1, horizontalBridge+2));
+                }
             }
         }
         for (int col = 0; col < cols; col++) {
@@ -148,10 +221,18 @@ public class DrawingPanel extends JPanel {
                 int y1 = padY + verticalBridge * cellHeight;
                 int x2 = x1;
                 int y2 = padY + (verticalBridge+1) * cellHeight;
-                if(Math.random()<0.5)
+                if(Math.random()<0.5) {
                     placeStick(g, x1, y1, x2, y2);
+                    addAdjacency(graph.getNodeByRowCol(verticalBridge+1, col+1),
+                            graph.getNodeByRowCol(verticalBridge+2, col+1));
+                }
             }
         }
+    }
+
+    private void addAdjacency(Node node1, Node node2) {
+        node1.addNeighbour(node2);
+        node2.addNeighbour(node1);
     }
 
     private void placeStick(Graphics2D g, int x1, int y1, int x2, int y2){
@@ -189,25 +270,26 @@ public class DrawingPanel extends JPanel {
         }
     }
 
+    public void saveAsPng() throws IOException {
+        createOffscreenImage();
+        File file = new File("newimage.png");
+        ImageIO.write(image, "png", file);
+    }
+
     private void createOffscreenImage() {
         image = new BufferedImage(
                 canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
         offscreen = image.createGraphics();
         offscreen.setColor(Color.WHITE); //fill the image with white
         offscreen.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        paintGrid(offscreen);
+        placeSticks(offscreen, false);
+        placeStones(offscreen);
     }
 
     @Override
     public void update(Graphics g) { } //No need for update
-
-    @Override
-    public Graphics getGraphics() {
-        return graphics;
-    }
-
-    public void setGraphics(Graphics graphics) {
-        this.graphics = graphics;
-    }
 
     public void setCurrentPlayer(boolean currentPlayer) {
         this.currentPlayer = currentPlayer;

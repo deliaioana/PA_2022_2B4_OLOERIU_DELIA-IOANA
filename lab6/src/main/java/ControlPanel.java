@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 public class ControlPanel extends JPanel {
     final MainFrame frame;
@@ -15,7 +16,15 @@ public class ControlPanel extends JPanel {
     private void init() {
         setLayout(new GridLayout(1, 4));
         exitButton.addActionListener(this::exitGame);
-        saveButton.addActionListener(this::saveGame);
+
+        saveButton.addActionListener(actionEvent -> {
+            try {
+                saveGame(actionEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         loadButton.addActionListener(this::loadGame);
 
         add(exitButton);
@@ -27,8 +36,8 @@ public class ControlPanel extends JPanel {
         //de implementat load
     }
 
-    private void saveGame(ActionEvent actionEvent) {
-        //de implementat save
+    private void saveGame(ActionEvent actionEvent) throws IOException {
+        frame.canvas.saveAsPng();
     }
 
     private void exitGame(ActionEvent actionEvent) {
