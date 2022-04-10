@@ -47,6 +47,8 @@ public class DrawingPanel extends JPanel {
         this.boardHeight = (rows - 1) * cellHeight;
         setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 
+        if(graph != null)
+            nullifyCurrentGraphAndNodes();
         createGraph(rows, cols);
 
         this.addMouseListener(new MouseAdapter() {
@@ -59,13 +61,18 @@ public class DrawingPanel extends JPanel {
     }
 
     private void createGraph(int rows, int cols) {
-        //nullifyCurrentGraphAndNodes(); de implementat
+        NodeIDGenerator nodeIDGenerator = new NodeIDGenerator();
+
         graph = new Graph();
         for(int i=0; i<rows; ++i)
             for(int j=0; j<cols; ++j){
-                Node node = new Node(i+1, j+1);
+                Node node = new Node(i+1, j+1, nodeIDGenerator.getNewID());
                 graph.addNode(node);
             }
+    }
+
+    private void nullifyCurrentGraphAndNodes() {
+        graph.clearGraph();
     }
 
     public void tryPlacingStone(int x, int y) {
@@ -82,16 +89,12 @@ public class DrawingPanel extends JPanel {
                 this.setCurrentPlayer(!currentPlayer);
                 graph.setLastNode(graph.getNodeByRowCol(thisRow, thisCol));
                 if(isAWinningPosition())
-                    System.out.println("Playarul care a facut ultima mutare a castigat!");
-            }
-            else {
-                //
+                    if(currentPlayer)
+                        System.out.println("Playarul portocaliu a castigat!");
+                    else
+                        System.out.println("Playarul negru a castigat!");
             }
         }
-        else {
-            //
-        }
-
     }
 
     private boolean isAWinningPosition() {
