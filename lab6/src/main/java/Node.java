@@ -79,24 +79,6 @@ public class Node implements Serializable {
         this.id = id;
     }
 
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeInt(id);
-        stream.writeInt(row);
-        stream.writeInt(col);
-        stream.writeBoolean(used);
-        stream.writeBoolean(player);
-        stream.writeObject(neighboursIDs);
-    }
-
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        id = stream.readInt();
-        row = stream.readInt();
-        col = stream.readInt();
-        used = stream.readBoolean();
-        player = stream.readBoolean();
-        neighboursIDs = (ArrayList<Integer>) stream.readObject();
-    }
-
     @Override
     public String toString() {
         return "{\n" + id +
@@ -125,5 +107,16 @@ public class Node implements Serializable {
 
     public void setNeighboursIDs(ArrayList<Integer> neighboursIDs) {
         this.neighboursIDs = neighboursIDs;
+    }
+
+    public boolean isInList(Integer id) {
+        if(this.id == 26) {
+            boolean d = true;
+        }
+        for (Node node : connections) {
+            if(node.getId() == id)
+                return true;
+        }
+        return false;
     }
 }

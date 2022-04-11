@@ -33,25 +33,14 @@ public class Graph implements Serializable {
     }
 
     public void printGraphInConsole(){
+        System.out.println("GRAFUL ESTE: ");
         for (Node node : nodes) {
-            System.out.println("ROW:" + node.getRow() + ", COL:" + node.getCol());
+            System.out.println("\nROW:" + node.getRow() + ", COL:" + node.getCol());
             System.out.println("adiacente: ");
             for (Node node2 : node.getConnections()) {
                 System.out.print("r:" + node2.getRow() + " c:" + node2.getCol() + "; ");
             }
         }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeObject(lastNode);
-        for (Node node : getNodes()){
-            stream.writeObject(node);
-        }
-    }
-
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        lastNode = (Node) stream.readObject();
-        nodes = ((List) stream.readObject());
     }
 
     public void setLastNode(Node node) {
@@ -62,8 +51,7 @@ public class Graph implements Serializable {
         return lastNode;
     }
 
-    public void saveToFile(String fileName) throws IOException {
-        FileWriter fileWriter = new FileWriter(fileName);
+    public void saveToFile(String fileName, FileWriter fileWriter) throws IOException {
         fileWriter.write(lastNode.toString());
         for (Node node : getNodes()){
             fileWriter.write(node.toString());
@@ -72,19 +60,17 @@ public class Graph implements Serializable {
         fileWriter.close();
     }
 
-    public void getFromFile(String fileName) throws FileNotFoundException {
+    public void getFromFile(File file, String fileName, Scanner scanner) throws FileNotFoundException {
         clearGraph();
         String line;
-        File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
 
         line = scanner.nextLine(); //empty line {
-        //line = scanner.nextLine();
+        if(lastNode == null)
+            lastNode = new Node();
         parseNode(file, fileName, scanner, lastNode, line);
 
         line = scanner.nextLine();
         while(!line.isEmpty()){
-            //line = scanner.nextLine();
             Node node = new Node();
             parseNode(file, fileName, scanner, node, line);
             nodes.add(node);
@@ -92,6 +78,7 @@ public class Graph implements Serializable {
         }
 
         restoreConnectionsFromIDs();
+        scanner.close();
     }
 
     private void parseNode(File file, String fileName, Scanner scanner, Node node, String line) {
@@ -123,10 +110,13 @@ public class Graph implements Serializable {
     public void restoreConnectionsFromIDs(){
         for (Node node : nodes) {
             for (Integer id : node.getNeighboursIDs()) {
-                node.getConnections().add(findNodeByID(id));
-                findNodeByID(id).getConnections().add(node);
+                if(!node.isInList(id))
+                    node.getConnections().add(findNodeByID(id));
+                if(!findNodeByID(id).isInList(node.getId()))
+                    findNodeByID(id).getConnections().add(node);
             }
         }
+        lastNode = findNodeByID(lastNode.getId());
     }
 
     private Node findNodeByID(Integer id) {

@@ -4,9 +4,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class DrawingPanel extends JPanel {
     private final MainFrame frame;
@@ -83,6 +84,10 @@ public class DrawingPanel extends JPanel {
         int thisCol = getColFromX(x);
 
         if(areCoordInsideCircle(x, y, circleX, circleY)) {
+
+            if(graph.getNodeByRowCol(thisRow, thisCol).getId() == 1)
+                System.out.println("Verificam nodul cu id 1.");
+
             if(respectsRules(thisRow, thisCol, currentPlayer)) {
                 graph.getNodeByRowCol(thisRow, thisCol).setUsed(true);
                 graph.getNodeByRowCol(thisRow, thisCol).setPlayer(currentPlayer);
@@ -94,6 +99,12 @@ public class DrawingPanel extends JPanel {
                     else
                         System.out.println("Playarul negru a castigat!");
             }
+            else{
+                System.out.println("Nod invalid");
+            }
+        }
+        else{
+            System.out.println("Nu ai apasat un nod");
         }
     }
 
@@ -143,6 +154,8 @@ public class DrawingPanel extends JPanel {
     }
 
     private boolean respectsRules(int x, int y, boolean currentPlayer) {
+        System.out.println("Nodul apasat: ");
+        System.out.println(graph.getNodeByRowCol(x, y));
         if(graph.getLastNode() == null)
             return (!graph.getNodeByRowCol(x, y).getConnections().isEmpty());
         return (!graph.getNodeByRowCol(x, y).isUsed() &&
@@ -300,6 +313,65 @@ public class DrawingPanel extends JPanel {
 
     public boolean getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public void saveCanvasInfoToFile(String fileName, FileWriter fileWriter) throws IOException {
+        fileWriter.write(Integer.toString(rows));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(cols));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(canvasWidth));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(canvasHeight));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(boardWidth));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(boardHeight));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(cellWidth));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(cellHeight));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(padX));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(padY));
+        fileWriter.write("\n");
+        fileWriter.write(Integer.toString(stoneSize));
+        fileWriter.write("\n");
+        fileWriter.write(String.valueOf(currentPlayer));
+        fileWriter.write("\n");
+        fileWriter.write(String.valueOf(firstTime));
+        fileWriter.write("\n");
+    }
+
+    public void getInfoFromFile(File file, String fileName, Scanner scanner) {
+        String line;
+        line = scanner.nextLine();
+        rows = Integer.parseInt(line);
+        line = scanner.nextLine();
+        cols = Integer.parseInt(line);
+        line = scanner.nextLine();
+        canvasWidth = Integer.parseInt(line);
+        line = scanner.nextLine();
+        canvasHeight = Integer.parseInt(line);
+        line = scanner.nextLine();
+        boardWidth = Integer.parseInt(line);
+        line = scanner.nextLine();
+        boardHeight = Integer.parseInt(line);
+        line = scanner.nextLine();
+        cellWidth = Integer.parseInt(line);
+        line = scanner.nextLine();
+        cellHeight = Integer.parseInt(line);
+        line = scanner.nextLine();
+        padX = Integer.parseInt(line);
+        line = scanner.nextLine();
+        padY = Integer.parseInt(line);
+        line = scanner.nextLine();
+        stoneSize = Integer.parseInt(line);
+        line = scanner.nextLine();
+        currentPlayer = Boolean.parseBoolean(line);
+        line = scanner.nextLine();
+        firstTime = Boolean.parseBoolean(line);
     }
 
     //Draw the offscreen image, using the original graphics

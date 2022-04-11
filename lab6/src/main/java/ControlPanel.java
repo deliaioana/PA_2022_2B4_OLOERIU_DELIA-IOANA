@@ -3,7 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -57,13 +60,28 @@ public class ControlPanel extends JPanel {
     }
 
     private void loadGame(ActionEvent actionEvent) throws FileNotFoundException {
-        frame.canvas.getGraph().getFromFile("savedGame.txt");
+        String fileName = new String("savedGame.txt");
+        File file = new File(fileName);
+        Scanner scanner = new Scanner(file);
+
+        frame.canvas.getInfoFromFile(file, fileName, scanner);
+        frame.canvas.getGraph().getFromFile(file, fileName, scanner);
         frame.repaint();
     }
 
-    private void saveGame(ActionEvent actionEvent) throws IOException {
+    private void printUsefulInfo(String message){
+        System.out.println(message);
+        frame.canvas.getGraph().printGraphInConsole();
+        System.out.println("\nLast node: ");
+        System.out.println(frame.canvas.getGraph().getLastNode());
+    }
 
-        frame.canvas.getGraph().saveToFile("savedGame.txt");
+    private void saveGame(ActionEvent actionEvent) throws IOException {
+        String fileName = new String("savedGame.txt");
+        FileWriter fileWriter = new FileWriter(fileName);
+
+        frame.canvas.saveCanvasInfoToFile(fileName, fileWriter);
+        frame.canvas.getGraph().saveToFile(fileName, fileWriter);
     }
 
     private void exitGame(ActionEvent actionEvent) {
