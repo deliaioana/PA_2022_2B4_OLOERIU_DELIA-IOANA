@@ -1,7 +1,9 @@
+import model.Game;
+
 import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Game game = new Game(2);
+        Game game = new Game(3);
     }
 }
