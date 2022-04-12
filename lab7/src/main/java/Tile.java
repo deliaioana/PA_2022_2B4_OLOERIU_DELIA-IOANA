@@ -2,6 +2,11 @@ public class Tile {
     private Character letter;
     private int points;
 
+    Tile (Character letter, int points){
+        this.setLetter(letter);
+        this.setPoints(points);
+    }
+
     public Character getLetter() {
         return letter;
     }
