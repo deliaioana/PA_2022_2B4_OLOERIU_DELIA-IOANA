@@ -7,6 +7,7 @@ public class Game {
     private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<>();
     private Bag bag = new Bag();
     private Board board;
+    private Player winner = new Player();
 
     public Game(int numberOfPlayers){
         PlayerIDGenerator playerIDGenerator = new PlayerIDGenerator();
@@ -20,6 +21,11 @@ public class Game {
 
     public void start() {
         System.out.println("Game is starting!");
+
+        TimerThread timerThread = new TimerThread();
+        timerThread.setDaemon(true);
+        timerThread.start();
+
         for (Player player : players ) {
             new Thread(player).start();
         }
@@ -27,8 +33,18 @@ public class Game {
 
         }
         stopAllPlayerThreads();
+        //stopDaemonThread(timerThread);
+
         board.printAllInfoWordsAndScores();
         System.out.println("Game is finished!");
+        winner = board.getWinner();
+        int winnerPoints = board.getWinnerPoints();
+        System.out.println("The winner is: " + winner);
+        System.out.println("With a total of: " + winnerPoints);
+    }
+
+    private void stopDaemonThread(TimerThread timerThread) {
+        timerThread.stopThread();
     }
 
     private void stopAllPlayerThreads() {
@@ -38,7 +54,14 @@ public class Game {
     }
 
     private boolean isStillGoing() {
-        return !bag.getTiles().isEmpty();
+        if(bag.getTiles().isEmpty()){
+            for (Player player: players) {
+                if(player.isActive())
+                    return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     public CopyOnWriteArrayList<Player> getPlayers() {

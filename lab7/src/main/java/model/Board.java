@@ -11,13 +11,14 @@ public class Board {
     private CopyOnWriteArrayList<Player> players;
     private ConcurrentHashMap<Player, Integer> scores = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Player, List<Word>> playerWords = new ConcurrentHashMap<>();
+    private Player winner = new Player();
 
-    Board(CopyOnWriteArrayList<Player> players){
+    Board(CopyOnWriteArrayList<Player> players) {
         this.setPlayers(players);
         resetScores();
     }
 
-    private void resetScores(){
+    private void resetScores() {
         for (Player player : scores.keySet()) {
             scores.put(player, 0);
         }
@@ -34,7 +35,7 @@ public class Board {
         }
     }
 
-    public int computeWordScore(Word word){
+    public int computeWordScore(Word word) {
         int score = 0;
         for (Tile tile : word.getContainedTiles().keySet()) {
             score += tile.getPoints() * word.getContainedTiles().get(tile);
@@ -42,7 +43,7 @@ public class Board {
         return score;
     }
 
-    public void updatePlayerScore(Player player, int wordScore){
+    public void updatePlayerScore(Player player, int wordScore) {
         int currentScore = scores.get(player);
         int updatedScore = currentScore + wordScore;
         scores.put(player, updatedScore);
@@ -52,7 +53,7 @@ public class Board {
         return playerWords;
     }
 
-    public void printAllInfoWordsAndScores(){
+    public synchronized void printAllInfoWordsAndScores() {
         for (Player player : players) {
             System.out.println("\n\nPlayer " + player.getName() + "(" + player.getId() + ") got: " + scores.get(player) + ".");
             System.out.println("Their words were: ");
@@ -60,18 +61,18 @@ public class Board {
                 System.out.print(word + " ");
             }
         }
+
         System.out.print("\n\n");
     }
 
     public void submitWordFromPlayer(Word word, Player player) {
         System.out.println("Player " + player.getId() + " submitted this word: " + word);
 
-        if(getPlayerWords().containsKey(player)){
+        if (getPlayerWords().containsKey(player)) {
             List<Word> words = new ArrayList<>(getPlayerWords().get(player));
             words.add(word);
             getPlayerWords().put(player, words);
-        }
-        else {
+        } else {
             getPlayerWords().put(player, new ArrayList<>());
             getPlayerWords().get(player).add(word);
         }
@@ -80,5 +81,36 @@ public class Board {
 
         int wordScore = computeWordScore(word);
         updatePlayerScore(player, wordScore);
+    }
+
+    public void computeWinner() {
+        int maxScore = 0;
+        Player winner = new Player();
+        for (Player player : scores.keySet()) {
+            if (scores.get(player) > maxScore) {
+                maxScore = scores.get(player);
+                winner = player;
+            }
+        }
+        setWinner(winner);
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    public int getWinnerPoints() {
+        return scores.get(winner);
+    }
+
+    public Player getWinner() {
+        int maxScore = 0;
+        for (Player player : scores.keySet()) {
+            if (scores.get(player) > maxScore) {
+                maxScore = scores.get(player);
+                winner = player;
+            }
+        }
+        return winner;
     }
 }
