@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 public class UserInfo {
@@ -7,7 +9,7 @@ public class UserInfo {
     private ArrayList<Integer> friendsIDs;
     private ArrayList<String> messages;
 
-    UserInfo(String nickname) {
+    public UserInfo(String nickname) {
         setName(nickname);
         setLoggedIn(false);
         setFriendsIDs(new ArrayList<>());

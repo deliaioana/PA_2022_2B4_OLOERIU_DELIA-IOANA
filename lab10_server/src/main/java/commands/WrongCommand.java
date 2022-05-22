@@ -1,3 +1,7 @@
+package commands;
+
+import commands.MessageSender;
+
 import java.net.Socket;
 
 public class WrongCommand {

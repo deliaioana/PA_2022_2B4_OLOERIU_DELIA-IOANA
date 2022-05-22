@@ -1,3 +1,9 @@
+package commands;
+
+import commands.MessageSender;
+import model.Server;
+import model.UserInfo;
+
 import java.net.Socket;
 
 public class FriendCommand {

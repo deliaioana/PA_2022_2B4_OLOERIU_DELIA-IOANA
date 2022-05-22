@@ -1,3 +1,8 @@
+package model;
+
+import model.CommunicatorWithClients;
+import model.UserInfo;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +27,7 @@ public class Server {
         System.out.println("The server stopped.");
     }
 
-    Server(int portNumber) {
+    public Server(int portNumber) {
         createOrLoadFile();
 
         try {
@@ -80,7 +85,7 @@ public class Server {
         this.file = file;
     }
 
-    static synchronized List<UserInfo> getUsers() {
+    public static synchronized List<UserInfo> getUsers() {
         return users;
     }
 

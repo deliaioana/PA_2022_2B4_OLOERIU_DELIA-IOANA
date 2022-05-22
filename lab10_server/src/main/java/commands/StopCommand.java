@@ -1,3 +1,7 @@
+package commands;
+
+import model.Server;
+
 import java.io.IOException;
 import java.net.Socket;
 

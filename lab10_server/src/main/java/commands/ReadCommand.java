@@ -1,3 +1,7 @@
+package commands;
+
+import model.UserInfo;
+
 import java.net.Socket;
 
 public class ReadCommand {

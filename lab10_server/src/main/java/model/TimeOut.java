@@ -1,3 +1,7 @@
+package model;
+
+import model.CommunicatorWithClients;
+
 import java.io.IOException;
 
 public class TimeOut extends Thread {
