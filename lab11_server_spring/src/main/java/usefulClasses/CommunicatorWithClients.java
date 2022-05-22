@@ -1,3 +1,7 @@
+package usefulClasses;
+
+import model.Server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

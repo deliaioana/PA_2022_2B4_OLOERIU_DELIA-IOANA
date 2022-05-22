@@ -8,6 +8,6 @@ public class Lab11ServerSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Lab11ServerSpringApplication.class, args);
+		Server server = new Server(6666);
 	}
-
 }
