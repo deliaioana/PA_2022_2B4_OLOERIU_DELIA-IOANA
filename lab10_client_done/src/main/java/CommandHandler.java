@@ -5,52 +5,81 @@ import java.util.Scanner;
 
 public class CommandHandler {
     private Client client;
-
+    //private int clNr = client != null ? client.getClientNr() : 0;
 
     void run(Client client, DataOutputStream outputStream,
              DataInputStream inputStream) throws IOException {
         setClient(client);
         Scanner inputScanner = new Scanner(System.in);
+
+        int clientsNumber = client.getClientNr();
+
         while(client.getStillRunning()) {
             System.out.println("Enter next command:");
 
             String command = inputScanner.nextLine();
-            System.out.println("Your entered command is: " + command);
 
             if(command.equals("exit")) {
-                sendCommandToServer(command, outputStream);
-                getFeedbackFromServer(inputStream);
+                if(sendCommandToServer(command, outputStream)) {
+                    getFeedbackFromServer(inputStream);
+                }
 
                 inputScanner.close();
                 client.stop();
             }
+
             else {
-                sendCommandToServer(command, outputStream);
-                getFeedbackFromServer(inputStream);
+                if(command.equals("stop")) {
+                    sendCommandToServer(command, outputStream);
+                    client.stop();
+//                    clientsNumber--;
+//                    if(clientsNumber> 0){
+//                        client.stop();
+//                    }
+//                    else{
+//                        sendCommandToServer(command, outputStream);
+//                        client.stop();
+//                    }
+
+
+                }
+                else {
+                    if(sendCommandToServer(command, outputStream)) {
+                        getFeedbackFromServer(inputStream);
+                    }
+                }
             }
         }
     }
 
     private boolean sendCommandToServer(String command, DataOutputStream outputStream){
-        System.out.println("Sending command to server.");
         try {
             outputStream.writeUTF(command);
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("The server is not running anymore.");
+            try {
+                client.stop();
+            } catch (IOException ex) {
+                //ex.printStackTrace();
+            }
             return false;
         }
+        System.out.println("Successfully sent.");
         return true;
     }
 
-    private void  getFeedbackFromServer(DataInputStream inputStream) {
+    private void getFeedbackFromServer(DataInputStream inputStream) {
         String feedback = "";
+        Boolean validFeedback = true;
         try {
             feedback = inputStream.readUTF();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            validFeedback = false;
         }
-        System.out.println("Server feedback: " + feedback);
+        if(validFeedback){
+            System.out.println("Server feedback: " + feedback);
+        }
     }
 
     public Client getClient() {

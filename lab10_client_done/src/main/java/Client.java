@@ -8,35 +8,45 @@ public class Client {
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
     private boolean stillRunning;
+    private Boolean workingSocket = true;
+    private int clientNr = 0;
 
     Client(String address, int portNumber) {
+
         try {
             socket = new Socket(address, portNumber);
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("This client is now connected.");
-        try {
-            outputStream = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        setStillRunning(true);
-        CommandHandler commandHandler = new CommandHandler();
-
-        try {
-            inputStream = new DataInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("This socket does not work.");
+            workingSocket = false;
         }
 
-        while(stillRunning) {
+        if(workingSocket) {
+            System.out.println("This client is now connected.");
+            clientNr++;
+
             try {
-                commandHandler.run(this, outputStream, inputStream);
+                outputStream = new DataOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            setStillRunning(true);
+            CommandHandler commandHandler = new CommandHandler();
+
+            try {
+                inputStream = new DataInputStream(socket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            while(stillRunning) {
+                try {
+                    commandHandler.run(this, outputStream, inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
     }
 
     public void stop() throws IOException {
@@ -52,5 +62,9 @@ public class Client {
 
     public void setStillRunning(boolean value) {
         stillRunning = value;
+    }
+
+    public int getClientNr(){
+        return clientNr;
     }
 }
