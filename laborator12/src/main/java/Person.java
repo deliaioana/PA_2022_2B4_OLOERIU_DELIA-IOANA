@@ -1,26 +1,42 @@
-package testClasses;
-
 import java.io.IOException;
 
-public class Person implements ClassInterface{
+public class Person implements ClassInterface {
     private String fullName;
     private Integer age;
     private String address;
     private String phoneNumber;
     private String email;
 
+    Person(String fullName, Integer age, String address, String phoneNumber, String email) {
+        setAddress(address);
+        setAge(age);
+        setEmail(email);
+        setFullName(fullName);
+        setPhoneNumber(phoneNumber);
+    }
+
+    public Person(String... params) {
+        System.out.println(params);
+    }
+
     public void printPersonInfo(){
-        System.out.println(this);
+        System.out.println(this.toString());
+    }
+
+    public static void printHello(){
+        System.out.println("Hello");
     }
 
     @Override
     public void execute(String... params) throws IOException {
-        printPersonInfo();
+        Person person = new Person(params);
+        //person.printPersonInfo();
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Person\nfull name: " + fullName + ", age: " + age + ", address: " + address
+                + ", phone: " + phoneNumber + ", email: " + email;
     }
 
     public String getFullName() {

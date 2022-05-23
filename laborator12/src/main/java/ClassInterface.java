@@ -1,5 +1,3 @@
-package testClasses;
-
 import java.io.IOException;
 
 public interface ClassInterface {
