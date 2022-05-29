@@ -36,9 +36,9 @@ public class Main {
         //n random words
         String[] words = new String[n];
         for (int i = 0; i < n; ++i)
-            words[i] = getRandomWordFromAlphabet(alphabet, p, args.length - 2);
-        if (n < BOUND)
-            System.out.println("Generated array of random words: " + Arrays.toString(words));
+            words[i] = WordHandler.getRandomWordFromAlphabet(alphabet, p, args.length - 2);
+        /*if (n < BOUND)
+            System.out.println("Generated array of random words: " + Arrays.toString(words));*/
 
         //adjacency matrix
         boolean[][] adjacency = new boolean[n][n];
@@ -48,7 +48,7 @@ public class Main {
 
         for (int i = 0; i < n; ++i)
             for (int j = 0; j < n; ++j)
-                adjacency[i][j] = areNeighbors(i, j, p, words);
+                adjacency[i][j] = WordHandler.areNeighbors(i, j, p, words);
 
         /* // print adj matrix
         if (n < BOUND) {
@@ -73,28 +73,15 @@ public class Main {
             }
 
             //running time in nanoseconds for a bigger n
-            if (n < BOUND)
+            /*if (n < BOUND)
                 System.out.println(neighbors);
             else{
                 long endTime = System.nanoTime();
                 long timeDifference = endTime - startTime;
                 System.out.println("Running time of the application in nanoseconds: " + timeDifference);
-            }
-    }
+            }*/
 
-    private static boolean areNeighbors ( int x, int y, int length, String[] words){
-        for (int i = 0; i < length; ++i)
-            if (words[x].contains(String.valueOf(words[y].charAt(i))))
-                return true;
-        return false;
-    }
-
-    private static String getRandomWordFromAlphabet ( char[] alphabet, int length, int alphabetSize){
-        StringBuilder s = new StringBuilder();
-        for (int j = 0; j < length; ++j) {
-            char c = alphabet[(int) (Math.random() * (alphabetSize - 1))];
-            s.append(c);
-        }
-        return s.toString();
+            //Bonus
+            WordHandler.findMaxSubset(n, words);
     }
 }
