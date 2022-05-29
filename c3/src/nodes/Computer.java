@@ -1,3 +1,8 @@
+package nodes;
+
+import usefulClasses.Identifiable;
+import usefulClasses.Storage;
+
 public class Computer extends Node implements Identifiable, Storage {
 
     private String IP;
@@ -56,7 +61,7 @@ public class Computer extends Node implements Identifiable, Storage {
                 '}';
     }
 
-    public long corvertCapacityUnit(String unit){
-        return Storage.super.corvertCapacityUnit(unit);
+    public long convertCapacityUnit(String unit){
+        return Storage.super.convertCapacityUnit(unit);
     }
 }

@@ -1,3 +1,5 @@
+package usefulClasses;
+
 import java.util.Random;
 
 public class IPAddressGenerator {

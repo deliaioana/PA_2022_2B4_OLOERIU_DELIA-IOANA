@@ -1,9 +1,11 @@
+package usefulClasses;
+
 public interface Storage {
     void setStorageCapacity(int storageCapacity);
     int getStorageUsed();
     void setStorageUsed(int storageUsed);
     int getStorageCapacity();
-    default long corvertCapacityUnit(String unit){
+    default long convertCapacityUnit(String unit){
         long value = this.getStorageCapacity();
         switch (unit) {
             case "megabytes" -> value *= 1000;

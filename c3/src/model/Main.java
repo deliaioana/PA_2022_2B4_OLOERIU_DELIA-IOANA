@@ -1,3 +1,5 @@
+package model;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -49,63 +51,5 @@ public class Main {
         network.printAllShortestPaths();
         */
 
-        // Bonus
-        // testing 1
-        /*Network network = new Network("Network 1");
-
-        IPAddressGenerator generator = new IPAddressGenerator();
-
-        Node first = new Computer(generator.randomIP(), "Computer A", 250, 100, "Center 1");
-        Node second = new Router(generator.randomIP(), "Router A", 4, "Center 1");
-
-        network.addNode(first);
-        network.addNode(second);
-
-        first.addProbabilityOfFailure(second, 0.3);
-
-        network.computeSafestPath(first, second);*/
-
-        //testing 2
-        /* Network network = new Network("Network 1");
-
-        IPAddressGenerator generator = new IPAddressGenerator();
-
-        Node first = new Computer(generator.randomIP(), "Computer A", 250, 100, "Center 1");
-        Node second = new Router(generator.randomIP(), "Router A", 4, "Center 1");
-        Node third = new Switch("Switch A", 10, 3, "Center 1");
-
-        network.addNode(first);
-        network.addNode(second);
-        network.addNode(third);
-
-        first.addProbabilityOfFailure(second, 0.5);
-        first.addProbabilityOfFailure(third, 0.1);
-        second.addProbabilityOfFailure(third, 0.1);
-
-        network.computeSafestPath(first, second);*/
-
-        //testing 3
-        /*
-        Network network = new Network("Network 1");
-
-        IPAddressGenerator generator = new IPAddressGenerator();
-
-        Node first = new Computer(generator.randomIP(), "Computer A", 250, 100, "Center 1");
-        Node second = new Router(generator.randomIP(), "Router A", 4, "Center 1");
-        Node third = new Switch("Switch A", 10, 3, "Center 1");
-        Node fourth = new Switch("Switch B", 15, 10, "Center 2");
-
-        network.addNode(first);
-        network.addNode(second);
-        network.addNode(third);
-        network.addNode(fourth);
-
-        first.addProbabilityOfFailure(second, 0.3);
-        second.addProbabilityOfFailure(third, 0.5);
-        second.addProbabilityOfFailure(fourth, 0.1);
-        third.addProbabilityOfFailure(fourth, 0.1);
-
-
-        network.computeSafestPath(first, third);*/
     }
 }

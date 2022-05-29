@@ -1,3 +1,7 @@
+package usefulClasses;
+
+import nodes.Node;
+
 import java.util.Comparator;
 
 public class NodeComparatorByID implements Comparator<Node> {

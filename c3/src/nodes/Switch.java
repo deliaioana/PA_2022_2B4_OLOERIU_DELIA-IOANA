@@ -1,3 +1,5 @@
+package nodes;
+
 public class Switch extends Node {
     private int numberOfPorts;
     private int portsUsed;
