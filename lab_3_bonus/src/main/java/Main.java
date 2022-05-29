@@ -85,7 +85,6 @@ public class Main {
         network.computeSafestPath(first, second);*/
 
         //testing 3
-        /*
         Network network = new Network("Network 1");
 
         IPAddressGenerator generator = new IPAddressGenerator();
@@ -106,6 +105,6 @@ public class Main {
         third.addProbabilityOfFailure(fourth, 0.1);
 
 
-        network.computeSafestPath(first, third);*/
+        network.computeSafestPath(first, third);
     }
 }

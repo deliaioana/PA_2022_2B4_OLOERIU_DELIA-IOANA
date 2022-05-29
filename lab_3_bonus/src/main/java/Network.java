@@ -150,7 +150,7 @@ public class Network {
                 this.computeShortestPathBetween(sourceNode, destinationNode));
     }
 
-    public void computeSafestPath(Node start, Node finish) {
+    public Double computeSafestPath(Node start, Node finish) {
         //modified bfs
         nullifyProbabilities();
         start.probabilityOfReachingNode = 1.0;
@@ -176,10 +176,10 @@ public class Network {
             queue.remove(currentNode);
         }
 
-        printSafestPath(start, finish);
+        return printSafestPath(start, finish);
     }
 
-    private void printSafestPath(Node start, Node finish) {
+    private Double printSafestPath(Node start, Node finish) {
         Node currentNode = finish;
         List<Node> path = new ArrayList<>();
 
@@ -206,6 +206,7 @@ public class Network {
         for(int i = path.size()-1; i>=0; --i) {
             System.out.println(path.size()-i + ": " + path.get(i).getName() + ", prob of getting here: " + path.get(i).probabilityOfReachingNode);
         }
+        return finish.probabilityOfReachingNode;
     }
 
     private void improveProbability(Node currentNode, Node adjacent) {
