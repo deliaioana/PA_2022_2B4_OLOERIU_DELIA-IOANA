@@ -1,3 +1,8 @@
+package nodes;
+
+import useful.Identifiable;
+import useful.Storage;
+
 public class Computer extends Node implements Identifiable, Storage {
 
     private String IP;

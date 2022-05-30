@@ -1,4 +1,9 @@
-import org.w3c.dom.ranges.DocumentRange;
+package model;
+
+
+import nodes.Node;
+import useful.Identifiable;
+import useful.NodeComparatorByID;
 
 import java.util.*;
 
@@ -91,7 +96,7 @@ public class Network {
         while (unvisited.size() > 0) {
             Node currentNode = getLowestDistanceNode(unvisited, shortestDistances);
             unvisited.remove(currentNode);
-            for (Map.Entry < Node, Integer> adjacencyEntry: currentNode.costs.entrySet()) {
+            for (Map.Entry <Node, Integer> adjacencyEntry: currentNode.costs.entrySet()) {
                 Node adjacentNode = adjacencyEntry.getKey();
                 Integer edgeCost = adjacencyEntry.getValue();
                 if (!checkedNeighbors.contains(adjacentNode) && unvisited.contains(adjacentNode)) {
@@ -204,7 +209,8 @@ public class Network {
         path.add(currentNode);
 
         for(int i = path.size()-1; i>=0; --i) {
-            System.out.println(path.size()-i + ": " + path.get(i).getName() + ", prob of getting here: " + path.get(i).probabilityOfReachingNode);
+            System.out.println(path.size()-i + ": " + path.get(i).getName()
+                    + ", prob of getting here: " + path.get(i).probabilityOfReachingNode);
         }
         return finish.probabilityOfReachingNode;
     }

@@ -1,3 +1,5 @@
+package useful;
+
 public interface Storage {
     void setStorageCapacity(int storageCapacity);
     int getStorageUsed();

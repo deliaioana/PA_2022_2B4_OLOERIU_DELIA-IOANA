@@ -1,3 +1,7 @@
+package nodes;
+
+import useful.Identifiable;
+
 public class Router extends Node implements Identifiable {
     private String IP;
     private int numberOfAntennas;
